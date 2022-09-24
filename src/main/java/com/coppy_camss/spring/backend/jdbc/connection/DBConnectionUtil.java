@@ -1,5 +1,6 @@
 package com.coppy_camss.spring.backend.jdbc.connection;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
