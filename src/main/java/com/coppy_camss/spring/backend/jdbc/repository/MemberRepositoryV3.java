@@ -1,5 +1,6 @@
 package com.coppy_camss.spring.backend.jdbc.repository;
 
+
 import com.coppy_camss.spring.backend.jdbc.domain.Member;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -9,11 +10,10 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.NoSuchElementException;
 
-import static com.coppy_camss.spring.backend.jdbc.connection.ConnectionConst.*;
-
 /**
- * 트랜젝션 - 트랜젝션 매니저
- * DataSourceUtil.getConnection
+ * 트랜잭션 - 트랜잭션 매니저
+ * DataSourceUtils.getConnection()
+ * DataSourceUtils.releaseConnection()
  */
 @Slf4j
 public class MemberRepositoryV3 {
@@ -77,7 +77,6 @@ public class MemberRepositoryV3 {
 
     }
 
-
     public void update(String memberId, int money) throws SQLException {
         String sql = "update member set money=? where member_id=?";
 
@@ -99,7 +98,6 @@ public class MemberRepositoryV3 {
         }
 
     }
-
 
     public void delete(String memberId) throws SQLException {
         String sql = "delete from member where member_id=?";
@@ -124,13 +122,13 @@ public class MemberRepositoryV3 {
     private void close(Connection con, Statement stmt, ResultSet rs) {
         JdbcUtils.closeResultSet(rs);
         JdbcUtils.closeStatement(stmt);
-        /** 트랜잭션 동기화 사용하려면 datasourceUtils 사용*/
-        DataSourceUtils.releaseConnection(con,dataSource);
+        //주의! 트랜잭션 동기화를 사용하려면 DataSourceUtils를 사용해야 한다.
+        DataSourceUtils.releaseConnection(con, dataSource);
     }
 
 
     private Connection getConnection() throws SQLException {
-        // 트랜잭션 동기화를 사용하려면 datasourceUtils 사용
+        //주의! 트랜잭션 동기화를 사용하려면 DataSourceUtils를 사용해야 한다.
         Connection con = DataSourceUtils.getConnection(dataSource);
         log.info("get connection={}, class={}", con, con.getClass());
         return con;
